@@ -1,12 +1,14 @@
-package com.angelinaandronova.notesapp.ui.main
+package com.angelinaandronova.notesapp.ui
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.angelinaandronova.notesapp.R
+import dagger.android.support.AndroidSupportInjection
 
 class MainFragment : Fragment() {
 
@@ -15,6 +17,11 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var viewModel: MainViewModel
+
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

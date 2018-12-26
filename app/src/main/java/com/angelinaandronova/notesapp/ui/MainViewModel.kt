@@ -1,4 +1,4 @@
-package com.angelinaandronova.notesapp.ui.main
+package com.angelinaandronova.notesapp.ui
 
 import android.arch.lifecycle.ViewModel
 
