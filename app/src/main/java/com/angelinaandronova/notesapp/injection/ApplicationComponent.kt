@@ -2,10 +2,7 @@ package com.angelinaandronova.notesapp.injection
 
 import android.app.Application
 import com.angelinaandronova.notesapp.NotesApplication
-import com.angelinaandronova.notesapp.injection.module.ApplicationModule
-import com.angelinaandronova.notesapp.injection.module.FragmentModule
-import com.angelinaandronova.notesapp.injection.module.PresentationModule
-import com.angelinaandronova.notesapp.injection.module.ActivityModule
+import com.angelinaandronova.notesapp.injection.module.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -19,7 +16,8 @@ import javax.inject.Singleton
         ApplicationModule::class,
         ActivityModule::class,
         FragmentModule::class,
-        PresentationModule::class]
+        PresentationModule::class,
+        RepositoryModule::class]
 )
 interface ApplicationComponent {
 
