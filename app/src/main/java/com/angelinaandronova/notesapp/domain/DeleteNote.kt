@@ -1,15 +1,19 @@
 package com.angelinaandronova.notesapp.domain
 
 import com.angelinaandronova.notesapp.model.Note
+import javax.inject.Inject
 
 
-class DeleteNote(val note: Note): UndoableCommand {
+class DeleteNote @Inject constructor(
+    val note: Note,
+    private val repository: NotesRepository
+) : UndoableCommand {
     override fun execute() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        repository.delete(note)
     }
 
     override fun undo() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        repository.addNote(note)
     }
 
 }

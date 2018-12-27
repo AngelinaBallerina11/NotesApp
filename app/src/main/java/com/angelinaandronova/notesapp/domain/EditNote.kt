@@ -1,10 +1,14 @@
 package com.angelinaandronova.notesapp.domain
 
 import com.angelinaandronova.notesapp.model.Note
+import javax.inject.Inject
 
 
-class EditNote(val note: Note): Command {
+class EditNote @Inject constructor(
+    val note: Note,
+    private val repository: NotesRepository
+) : Command {
     override fun execute() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        repository.editNote(note)
     }
 }
