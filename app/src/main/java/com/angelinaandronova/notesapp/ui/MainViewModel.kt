@@ -8,24 +8,20 @@ import com.angelinaandronova.notesapp.model.Note
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val commandProcessor: CommandProcessor,
-    private val notesRepository: NotesRepository
+    private val commandProcessor: CommandProcessor
 ) : ViewModel() {
     private val liveData = MutableLiveData<List<Note>>()
-
-    init {
-        commandProcessor
-            .addToStack(AddNote(Note(100, "new note: test"), notesRepository))
-    }
+    @Inject lateinit var getNotes: GetNotes
+    @Inject lateinit var add: AddNote
+    @Inject lateinit var delete: DeleteNote
 
     fun getNotes(): LiveData<List<Note>> {
-        liveData.value = GetNotes(notesRepository).execute()
+        liveData.value = getNotes.execute()
         return liveData
     }
 
     fun deleteNote(note: Note) {
-        commandProcessor
-            .addToStack(DeleteNote(note, notesRepository))
+        commandProcessor.execute(delete.with(note))
     }
 
     fun undoDelete() {
@@ -35,10 +31,9 @@ class MainViewModel @Inject constructor(
     }
 
     fun saveNewNote(noteText: String) {
-        commandProcessor.addToStack(AddNote(
-            Note(title = noteText),
-            repository = notesRepository
-        ))
+        commandProcessor.execute(
+            add.with(Note(title = noteText))
+        )
     }
 
 }

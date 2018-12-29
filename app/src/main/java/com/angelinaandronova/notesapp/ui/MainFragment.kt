@@ -27,8 +27,7 @@ class MainFragment : Fragment(), NotesAdapter.OnNoteDeleteCallback {
 
     private lateinit var viewModel: MainViewModel
     lateinit var adapter: NotesAdapter
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)

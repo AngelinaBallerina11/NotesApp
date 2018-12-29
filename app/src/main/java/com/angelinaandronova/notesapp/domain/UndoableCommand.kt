@@ -1,6 +1,6 @@
 package com.angelinaandronova.notesapp.domain
 
 
-interface UndoableCommand : Command {
-    fun undo()
+abstract class UndoableCommand : Command() {
+    abstract fun undo()
 }

@@ -8,7 +8,7 @@ class CommandProcessor @Inject constructor() {
 
     private val stack = Stack<Command>()
 
-    fun addToStack(noteCommand: Command) {
+    fun execute(noteCommand: Command) {
         stack.push(noteCommand)
         noteCommand.execute()
     }
