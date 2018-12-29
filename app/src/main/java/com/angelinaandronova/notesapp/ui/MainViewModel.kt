@@ -34,4 +34,11 @@ class MainViewModel @Inject constructor(
             lastCommand.undo()
     }
 
+    fun saveNewNote(noteText: String) {
+        commandProcessor.addToStack(AddNote(
+            Note(title = noteText),
+            repository = notesRepository
+        ))
+    }
+
 }

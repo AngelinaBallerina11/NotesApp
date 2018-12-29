@@ -51,6 +51,11 @@ class MainFragment : Fragment(), NotesAdapter.OnNoteDeleteCallback {
         super.onStart()
         initRecyclerview()
         addSwipeListener()
+        add_fab.setOnClickListener { onAddNoteClicked() }
+    }
+
+    private fun onAddNoteClicked() {
+        AddNoteFragment().show(fragmentManager, "dialog")
     }
 
     private fun initViewModel() {
