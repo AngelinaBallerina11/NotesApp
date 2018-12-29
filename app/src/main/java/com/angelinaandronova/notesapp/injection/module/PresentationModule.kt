@@ -2,12 +2,12 @@ package com.angelinaandronova.notesapp.injection.module
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import co.joebirch.mobile_ui.injection.ViewModelFactory
 import com.angelinaandronova.notesapp.ui.MainViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
 import dagger.multibindings.IntoMap
+import javax.inject.Singleton
 import kotlin.reflect.KClass
 
 @Module
@@ -15,6 +15,7 @@ abstract class PresentationModule {
 
     @Binds
     @IntoMap
+    @Singleton
     @ViewModelKey(MainViewModel::class)
     abstract fun bindMainViewModel(viewModel: MainViewModel): ViewModel
 

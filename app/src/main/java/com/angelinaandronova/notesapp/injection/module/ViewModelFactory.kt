@@ -1,4 +1,4 @@
-package co.joebirch.mobile_ui.injection
+package com.angelinaandronova.notesapp.injection.module
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
@@ -30,7 +30,7 @@ open class ViewModelFactory : ViewModelProvider.Factory {
             }
         }
         if (creator == null) {
-            throw IllegalStateException("Unknown model class: " + modelClass)
+            throw IllegalStateException("Unknown model class: $modelClass")
         }
         try {
             return creator.get() as T

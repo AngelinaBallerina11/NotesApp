@@ -1,16 +1,17 @@
 package com.angelinaandronova.notesapp.domain
 
+import java.util.*
 import javax.inject.Inject
 
 
 class CommandProcessor @Inject constructor() {
 
-    private val queue = arrayListOf<Command>()
+    private val stack = Stack<Command>()
 
-    fun addToQueue(noteCommand: Command): CommandProcessor = apply { queue.add(noteCommand) }
-
-    fun processCommands(): CommandProcessor = apply {
-        queue.forEach { it.execute() }
-        queue.clear()
+    fun addToStack(noteCommand: Command) {
+        stack.push(noteCommand)
+        noteCommand.execute()
     }
+
+    fun getLastCommand(): Command? = if (stack.size > 0) stack.pop() else null
 }
