@@ -13,5 +13,11 @@ class CommandProcessor @Inject constructor() {
         noteCommand.execute()
     }
 
-    fun getLastCommand(): Command? = if (stack.size > 0) stack.pop() else null
+    private fun getLastCommand(): Command? = if (stack.size > 0) stack.pop() else null
+
+    fun undo() {
+        val lastCommand = getLastCommand()
+        if (lastCommand is UndoableCommand)
+            lastCommand.undo()
+    }
 }

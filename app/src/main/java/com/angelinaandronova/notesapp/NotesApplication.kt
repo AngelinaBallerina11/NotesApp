@@ -3,6 +3,7 @@ package com.angelinaandronova.notesapp
 import android.app.Activity
 import android.app.Application
 import com.angelinaandronova.notesapp.injection.DaggerApplicationComponent
+import com.facebook.stetho.Stetho
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -21,12 +22,17 @@ class NotesApplication : Application(), HasActivityInjector {
     override fun onCreate() {
         super.onCreate()
         setupTimber()
+        setupStetho()
 
         DaggerApplicationComponent
             .builder()
             .application(this)
             .build()
             .inject(this)
+    }
+
+    private fun setupStetho() {
+        Stetho.initializeWithDefaults(this)
     }
 
     private fun setupTimber() {

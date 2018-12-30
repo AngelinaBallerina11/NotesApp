@@ -17,12 +17,14 @@ import javax.inject.Singleton
         ActivityModule::class,
         FragmentModule::class,
         PresentationModule::class,
-        RepositoryModule::class]
+        RepositoryModule::class,
+        DatabaseModule::class]
 )
 interface ApplicationComponent {
 
     @Component.Builder
     interface Builder {
+
         @BindsInstance
         fun application(application: Application): Builder
 
