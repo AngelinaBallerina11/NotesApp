@@ -10,4 +10,9 @@ abstract class Command {
     fun with(note: Note): Command = apply {
         this.note = note
     }
+
+    internal var noteId: Int? = null
+    fun with(id: Int): Command = apply {
+        this.noteId = id
+    }
 }

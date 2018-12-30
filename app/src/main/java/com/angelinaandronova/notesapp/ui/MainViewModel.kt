@@ -2,10 +2,7 @@ package com.angelinaandronova.notesapp.ui
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import com.angelinaandronova.notesapp.domain.AddNote
-import com.angelinaandronova.notesapp.domain.CommandProcessor
-import com.angelinaandronova.notesapp.domain.DeleteNote
-import com.angelinaandronova.notesapp.domain.GetNotes
+import com.angelinaandronova.notesapp.domain.*
 import com.angelinaandronova.notesapp.model.Note
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,18 +19,21 @@ class MainViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
 
-    private var liveData: LiveData<List<Note>>? = null
+    private var notesList: LiveData<List<Note>>? = null
+    private var editedNote: LiveData<Note>? = null
     @Inject lateinit var getNotes: GetNotes
     @Inject lateinit var add: AddNote
     @Inject lateinit var delete: DeleteNote
+    @Inject lateinit var getSingleNote: GetSingleNote
+    @Inject lateinit var editNote: EditNote
 
     private fun fetchNotes() {
-        liveData = getNotes.execute()
+        notesList = getNotes.execute()
     }
 
     fun getNotes(): LiveData<List<Note>>? {
-        if (liveData == null) fetchNotes()
-        return liveData
+        if (notesList == null) fetchNotes()
+        return notesList
     }
 
     fun deleteNote(note: Note) = launch {
@@ -51,5 +51,21 @@ class MainViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         job.cancel()
+    }
+
+    fun getNoteById(noteId: Int) {
+        val noteCommand = getSingleNote.with(noteId)
+        commandProcessor.execute(noteCommand)
+        editedNote = (noteCommand as GetSingleNote).getResult()
+    }
+
+    fun getEditedNote(): LiveData<Note>? = editedNote
+
+    fun saveExistingNote(editedText: String) {
+        editedNote?.value?.let {
+            launch {
+                commandProcessor.execute(editNote.with(it.copy(title = editedText)))
+            }
+        }
     }
 }

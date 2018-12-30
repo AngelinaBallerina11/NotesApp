@@ -18,4 +18,10 @@ interface NotesDao {
 
     @Delete
     fun deleteNote(Note: Note)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun updateSingleNote(note: Note)
+
+    @Query("SELECT * FROM notes WHERE id = :id")
+    fun getNoteById(id: Int): LiveData<Note>
 }

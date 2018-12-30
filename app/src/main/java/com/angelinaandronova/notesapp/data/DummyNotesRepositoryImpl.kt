@@ -9,6 +9,14 @@ import javax.inject.Inject
 
 class DummyNotesRepositoryImpl @Inject constructor() : NotesRepository {
 
+    override fun getSingleNote(id: Int): LiveData<Note> {
+        val note = notes.first { it.id == id }
+        val livedata: MutableLiveData<Note> = MutableLiveData()
+        livedata.postValue(note)
+        return livedata
+    }
+
+
     companion object {
         val notes = arrayListOf(
             Note(1, "Need to walk my dog"),

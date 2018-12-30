@@ -9,4 +9,5 @@ interface NotesRepository {
     fun addNote(note: Note)
     fun editNote(note: Note)
     fun delete(note: Note)
+    fun getSingleNote(id: Int): LiveData<Note>
 }

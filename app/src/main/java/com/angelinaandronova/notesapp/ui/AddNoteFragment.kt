@@ -1,5 +1,6 @@
 package com.angelinaandronova.notesapp.ui
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
@@ -18,8 +19,22 @@ import javax.inject.Inject
 class AddNoteFragment : DialogFragment() {
 
     private lateinit var viewModel: MainViewModel
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private var editMode: Boolean = false
+
+    companion object {
+        private const val noteIdArgument: String = "note_id_arg"
+
+        fun getInstance(noteId: Int? = null): AddNoteFragment {
+            val myFragment = AddNoteFragment()
+            noteId?.let {
+                val args = Bundle()
+                args.putInt(noteIdArgument, it)
+                myFragment.arguments = args
+            }
+            return myFragment
+        }
+    }
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -37,9 +52,32 @@ class AddNoteFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
         showSoftKeyboard()
+        setFabClickListener()
+        setNoteTextIfEditMode()
+    }
+
+    private fun setNoteTextIfEditMode() {
+        val noteId = arguments?.getInt(noteIdArgument)
+        noteId?.let {
+            editMode = true
+            viewModel.getNoteById(noteId)
+            viewModel.getEditedNote()?.observe(this, Observer { note ->
+                note?.let {
+                    new_note_text.setText(it.title)
+                }
+            })
+        }
+    }
+
+    private fun setFabClickListener() {
         save_note_btn.setOnClickListener {
-            viewModel.saveNewNote(new_note_text.text.toString())
-            dialog.dismiss()
+            if (editMode) {
+                viewModel.saveExistingNote(new_note_text.text.toString())
+                dialog.dismiss()
+            } else {
+                viewModel.saveNewNote(new_note_text.text.toString())
+                dialog.dismiss()
+            }
         }
     }
 

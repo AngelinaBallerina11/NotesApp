@@ -19,9 +19,10 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.main_fragment.*
 import javax.inject.Inject
 
-class MainFragment : Fragment(), NotesAdapter.OnNoteDeleteCallback {
+class MainFragment : Fragment(), NotesAdapter.NoteCallback {
 
     companion object {
+        private const val DIALOG = "dialog"
         fun newInstance() = MainFragment()
     }
 
@@ -54,7 +55,7 @@ class MainFragment : Fragment(), NotesAdapter.OnNoteDeleteCallback {
     }
 
     private fun onAddNoteClicked() {
-        AddNoteFragment().show(fragmentManager, "dialog")
+        AddNoteFragment.getInstance().show(fragmentManager, DIALOG)
     }
 
     private fun initViewModel() {
@@ -82,13 +83,17 @@ class MainFragment : Fragment(), NotesAdapter.OnNoteDeleteCallback {
         recyclerview.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
     }
 
-    override fun showUndoMessage() {
+    override fun showUndoDeleteMessage() {
         val undoSnackbar = Snackbar.make(
             main_fragment,
             R.string.note_deleted, Snackbar.LENGTH_SHORT
         );
         undoSnackbar.setAction(R.string.undo_string) { viewModel.undoDelete() };
         undoSnackbar.show()
+    }
+
+    override fun onNoteClicked(noteId: Int) {
+        AddNoteFragment.getInstance(noteId).show(fragmentManager, DIALOG)
     }
 
 }

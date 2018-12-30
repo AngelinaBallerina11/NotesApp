@@ -11,6 +11,10 @@ class NotesRepositoryImpl @Inject constructor(
     private val db: NoteDatabase
 ) : NotesRepository {
 
+    override fun getSingleNote(id: Int): LiveData<Note> {
+        return db.notesDao().getNoteById(id)
+    }
+
     override fun getNotes(): LiveData<List<Note>> {
         return db.notesDao().getAllNotes()
     }
@@ -20,7 +24,7 @@ class NotesRepositoryImpl @Inject constructor(
     }
 
     override fun editNote(note: Note) {
-        // TODO
+        db.notesDao().updateSingleNote(note)
     }
 
     override fun delete(note: Note) {

@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.note.view.*
 
 class NotesAdapter(
     private val viewModel: MainViewModel,
-    private val callback: OnNoteDeleteCallback
+    private val callback: NoteCallback
 ) : RecyclerView.Adapter<NotesAdapter.VH>(),
     SwipeToDeleteCallback.ItemTouchHelperAdapter {
 
@@ -29,6 +29,7 @@ class NotesAdapter(
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.titleTextView.text = notes[position].title
+        holder.rootView.setOnClickListener { callback.onNoteClicked(notes[position].id!!) }
     }
 
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
@@ -36,20 +37,15 @@ class NotesAdapter(
         val titleTextView: TextView = view.title
     }
 
-    interface OnNoteDeleteCallback {
-        fun showUndoMessage()
-    }
-
-    fun addItem(note: Note) {
-        notes.add(note)
-        notifyItemInserted(notes.size)
+    interface NoteCallback {
+        fun showUndoDeleteMessage()
+        fun onNoteClicked(noteId: Int)
     }
 
     private fun removeAt(position: Int) {
         viewModel.deleteNote(notes[position])
-        //notes.removeAt(position)
         notifyItemRemoved(position)
-        callback.showUndoMessage()
+        callback.showUndoDeleteMessage()
     }
 
     override fun onItemDismiss(position: Int) {
