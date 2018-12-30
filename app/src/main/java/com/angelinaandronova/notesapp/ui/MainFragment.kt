@@ -61,7 +61,10 @@ class MainFragment : Fragment(), NotesAdapter.OnNoteDeleteCallback {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
         viewModel.getNotes()?.observe(this, Observer {
             it?.let { list ->
-                adapter.run { notes = list as ArrayList<Note> }
+                adapter.run {
+                    notes = list as ArrayList<Note>
+                    notifyDataSetChanged()
+                }
             }
         })
     }
