@@ -22,6 +22,7 @@ class NotesRepositoryImpl @Inject constructor(
     private val remote: RemoteDataSource
 ) : NotesRepository, CoroutineScope {
 
+    private val expirationInterval = 60 * 10 * 1000L /* 10 mins */
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
@@ -29,7 +30,12 @@ class NotesRepositoryImpl @Inject constructor(
     override fun getNotes(): LiveData<List<Note>> {
         remote.getNotes(object : GetNotesCallback {
             override fun onGetNotes(data: List<Note>?) {
-                data?.let { launch { cache.saveAllNotes(it) } }
+                data?.let {
+                    launch {
+                        cache.saveAllNotes(it)
+                        cache.setLastCacheTime(System.currentTimeMillis())
+                    }
+                }
             }
         })
         return cache.getNotes()
@@ -61,6 +67,11 @@ class NotesRepositoryImpl @Inject constructor(
 
     override fun delete(note: Note) {
         cache.delete(note)
+    }
+
+    private fun isCacheExpired(): Boolean {
+        val currentTime = System.currentTimeMillis()
+        return currentTime - cache.getLastCacheTime() > expirationInterval
     }
 
 }
