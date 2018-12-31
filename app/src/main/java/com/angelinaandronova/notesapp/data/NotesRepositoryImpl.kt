@@ -1,33 +1,33 @@
 package com.angelinaandronova.notesapp.data
 
 import android.arch.lifecycle.LiveData
-import com.angelinaandronova.notesapp.data.cache.NoteDatabase
+import com.angelinaandronova.notesapp.data.cache.CacheDataSource
 import com.angelinaandronova.notesapp.domain.NotesRepository
 import com.angelinaandronova.notesapp.model.Note
 import javax.inject.Inject
 
 
 class NotesRepositoryImpl @Inject constructor(
-    private val db: NoteDatabase
+    private val cache: CacheDataSource
 ) : NotesRepository {
 
     override fun getSingleNote(id: Int): LiveData<Note> {
-        return db.notesDao().getNoteById(id)
+        return cache.getSingleNote(id)
     }
 
     override fun getNotes(): LiveData<List<Note>> {
-        return db.notesDao().getAllNotes()
+        return cache.getNotes()
     }
 
     override fun addNote(note: Note) {
-        db.notesDao().insertSingleNote(note)
+        cache.addNote(note)
     }
 
     override fun editNote(note: Note) {
-        db.notesDao().updateSingleNote(note)
+        cache.editNote(note)
     }
 
     override fun delete(note: Note) {
-        db.notesDao().deleteNote(note)
+        cache.delete(note)
     }
 }

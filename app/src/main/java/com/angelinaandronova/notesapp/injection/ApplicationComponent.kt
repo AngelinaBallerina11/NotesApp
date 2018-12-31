@@ -18,7 +18,8 @@ import javax.inject.Singleton
         FragmentModule::class,
         PresentationModule::class,
         RepositoryModule::class,
-        DatabaseModule::class]
+        DatabaseModule::class,
+        CacheModule::class]
 )
 interface ApplicationComponent {
 
