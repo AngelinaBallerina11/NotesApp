@@ -12,4 +12,5 @@ import com.angelinaandronova.notesapp.model.Note
 )
 abstract class NoteDatabase : RoomDatabase() {
     abstract fun notesDao(): NotesDao
+    abstract fun configDao(): ConfigDao
 }

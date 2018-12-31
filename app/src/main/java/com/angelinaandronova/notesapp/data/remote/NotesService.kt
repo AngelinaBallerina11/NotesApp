@@ -1,6 +1,7 @@
 package com.angelinaandronova.notesapp.data.remote
 
 import com.angelinaandronova.notesapp.model.Note
+import retrofit2.Call
 import retrofit2.http.*
 
 
@@ -11,17 +12,17 @@ interface NotesService {
     }
 
     @GET(NOTES_ENDPOINT)
-    fun getAllNotes(): List<Note>
+    fun getAllNotes(): Call<List<Note>>
 
     @POST(NOTES_ENDPOINT)
-    fun createSingleNote(@Body note: Note): Note
+    fun createSingleNote(@Body note: Note): Call<Note>
 
     @GET("$NOTES_ENDPOINT/{id}")
-    fun getSingleNoteById(@Path("id") id: Long): Note
+    fun getSingleNoteById(@Path("id") id: Int): Call<Note>
 
     @PUT("$NOTES_ENDPOINT/{id}")
-    fun updateSingleNote(@Path("id") id: Long?, note: Note)
+    fun updateSingleNote(@Path("id") id: Int, note: Note): Call<Note>
 
     @DELETE("$NOTES_ENDPOINT/{id}")
-    fun deleteSingleNote(@Path("id") id: Long)
+    fun deleteSingleNote(@Path("id") id: Int): Call<Unit>
 }

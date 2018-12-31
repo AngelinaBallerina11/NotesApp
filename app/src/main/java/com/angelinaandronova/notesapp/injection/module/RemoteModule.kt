@@ -3,6 +3,9 @@ package com.angelinaandronova.notesapp.injection.module
 import com.angelinaandronova.notesapp.BuildConfig
 import com.angelinaandronova.notesapp.data.remote.NotesService
 import com.angelinaandronova.notesapp.data.remote.NotesServiceFactory
+import com.angelinaandronova.notesapp.data.remote.RemoteDataSource
+import com.angelinaandronova.notesapp.data.remote.RemoteDataSourceImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 
@@ -19,6 +22,6 @@ abstract class RemoteModule {
         }
     }
 
-    /* @Binds
-     abstract fun bindNotesRemote(notesRemote: NotesRemoteImpl): NotesRemote*/
+    @Binds
+    abstract fun bindRemoteDataSource(notesRemote: RemoteDataSourceImpl): RemoteDataSource
 }

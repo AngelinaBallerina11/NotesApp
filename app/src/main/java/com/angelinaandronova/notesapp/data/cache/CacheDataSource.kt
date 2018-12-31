@@ -10,4 +10,6 @@ interface CacheDataSource {
     fun editNote(note: Note)
     fun delete(note: Note)
     fun getSingleNote(id: Int): LiveData<Note>
+    fun saveAllNotes(notes: List<Note>)
+    fun setLastCacheTime(lastCache: Long)
 }

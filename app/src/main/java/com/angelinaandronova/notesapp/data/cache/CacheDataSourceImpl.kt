@@ -1,6 +1,7 @@
 package com.angelinaandronova.notesapp.data.cache
 
 import android.arch.lifecycle.LiveData
+import com.angelinaandronova.notesapp.model.Config
 import com.angelinaandronova.notesapp.model.Note
 import javax.inject.Inject
 
@@ -27,5 +28,13 @@ class CacheDataSourceImpl @Inject constructor(
 
     override fun delete(note: Note) {
         db.notesDao().deleteNote(note)
+    }
+
+    override fun saveAllNotes(notes: List<Note>) {
+        db.notesDao().insertNotes(notes)
+    }
+
+    override fun setLastCacheTime(lastCache: Long) {
+        db.configDao().insertConfig(Config(lastCacheTime = System.currentTimeMillis()))
     }
 }
