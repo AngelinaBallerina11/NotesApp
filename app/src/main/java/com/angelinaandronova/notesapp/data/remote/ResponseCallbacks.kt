@@ -18,3 +18,7 @@ interface GetSingleNoteCallback {
 interface UpdateNoteCallback {
     fun onUpdateNote(note: Note?)
 }
+
+interface DeleteNoteCallback {
+    fun onDeleteNote(noteId: Int?)
+}

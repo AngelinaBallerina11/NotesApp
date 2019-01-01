@@ -44,17 +44,23 @@ class RemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun updateNote(note: Note) {
+    override fun updateNote(note: Note, callback: UpdateNoteCallback) {
         return service.updateSingleNote(note.id!!, note).enqueue {
-            onResponse = {}
-            onFailure = {}
+            onResponse = {
+                if (it.isSuccessful) kotlin.run { callback.onUpdateNote(it.body()) }
+            }
+            onFailure = { callback.onUpdateNote(null) }
         }
     }
 
-    override fun deleteNote(id: Int) {
+    override fun deleteNote(id: Int, callback: DeleteNoteCallback) {
         service.deleteSingleNote(id).enqueue {
-            onResponse = {}
-            onFailure = {}
+            onResponse = {
+                if (it.code() == 204) {
+                    callback.onDeleteNote(id)
+                }
+            }
+            onFailure = { callback.onDeleteNote(null) }
         }
     }
 }

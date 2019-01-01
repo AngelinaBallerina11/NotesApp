@@ -16,7 +16,6 @@ class DatabaseModule {
 
     companion object {
         const val appDbName = "notes_db"
-        const val seedSql = "insert into notes (id, title) values (1, 'cook dinner')"
     }
 
     @Provides
@@ -24,13 +23,6 @@ class DatabaseModule {
     fun provideDatabase(app: Application): NoteDatabase {
         return Room
             .databaseBuilder(app, NoteDatabase::class.java, appDbName)
-            .addCallback(object : RoomDatabase.Callback() {
-                override fun onCreate(db: SupportSQLiteDatabase) {
-                    super.onCreate(db)
-                    Executors.newSingleThreadScheduledExecutor()
-                        .execute { db.execSQL(seedSql)}
-                }
-            })
             .build()
     }
 }

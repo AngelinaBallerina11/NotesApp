@@ -39,6 +39,6 @@ class CacheDataSourceImpl @Inject constructor(
     }
 
     override fun getLastCacheTime(): Long {
-        return db.configDao().getConfig().lastCacheTime
+        return db.configDao().getConfig()?.lastCacheTime ?: 0L
     }
 }

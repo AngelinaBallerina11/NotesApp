@@ -3,16 +3,12 @@ package com.angelinaandronova.notesapp.data
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.angelinaandronova.notesapp.data.cache.CacheDataSource
-import com.angelinaandronova.notesapp.data.remote.CreateNoteCallback
-import com.angelinaandronova.notesapp.data.remote.GetNotesCallback
-import com.angelinaandronova.notesapp.data.remote.GetSingleNoteCallback
-import com.angelinaandronova.notesapp.data.remote.RemoteDataSource
+import com.angelinaandronova.notesapp.data.remote.*
 import com.angelinaandronova.notesapp.domain.NotesRepository
 import com.angelinaandronova.notesapp.model.Note
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
@@ -28,50 +24,95 @@ class NotesRepositoryImpl @Inject constructor(
         get() = Dispatchers.IO + job
 
     override fun getNotes(): LiveData<List<Note>> {
-        remote.getNotes(object : GetNotesCallback {
-            override fun onGetNotes(data: List<Note>?) {
-                data?.let {
-                    launch {
-                        cache.saveAllNotes(it)
-                        cache.setLastCacheTime(System.currentTimeMillis())
+        if (isOnline() && isCacheExpired()) {
+            remote.getNotes(object : GetNotesCallback {
+                override fun onGetNotes(data: List<Note>?) {
+                    data?.let {
+                        launch {
+                            cache.saveAllNotes(it)
+                            cache.setLastCacheTime(System.currentTimeMillis())
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
         return cache.getNotes()
     }
 
     override fun addNote(note: Note) {
-        remote.createNote(note, object : CreateNoteCallback {
-            override fun onCreateNote(note: Note?) {
-                note?.let { launch { cache.addNote(it) } }
-            }
-        })
+        if (isOnline()) {
+            remote.createNote(note, object : CreateNoteCallback {
+                override fun onCreateNote(note: Note?) {
+                    note?.let { launch { cache.addNote(it) } }
+                }
+            })
+        } else {
+            launch { cache.addNote(note) }
+        }
     }
 
     override fun getSingleNote(id: Int): LiveData<Note> {
-        val liveData: MutableLiveData<Note> = MutableLiveData()
-        remote.getNote(id, object : GetSingleNoteCallback {
-            override fun onGetSingleNote(note: Note?) {
-                note?.let {
-                    liveData.value = it
+        if (isOnline()) {
+            val liveData: MutableLiveData<Note> = MutableLiveData()
+            remote.getNote(id, object : GetSingleNoteCallback {
+                override fun onGetSingleNote(note: Note?) {
+                    note?.let {
+                        liveData.value = it
+                    }
                 }
-            }
-        })
+            })
+            return liveData
+        }
         return cache.getSingleNote(id)
     }
 
     override fun editNote(note: Note) {
-        cache.editNote(note)
+        if (isOnline()) {
+            remote.updateNote(note, object : UpdateNoteCallback {
+                override fun onUpdateNote(note: Note?) {
+                    note?.let { launch { cache.editNote(note) } }
+                }
+            })
+        } else {
+            cache.editNote(note)
+        }
     }
 
     override fun delete(note: Note) {
-        cache.delete(note)
+        if (isOnline()) {
+            remote.deleteNote(note.id!!, object : DeleteNoteCallback {
+                override fun onDeleteNote(noteId: Int?) {
+                    noteId?.let { launch { cache.delete(note) } }
+                }
+            })
+        } else {
+            cache.delete(note)
+        }
     }
 
     private fun isCacheExpired(): Boolean {
-        val currentTime = System.currentTimeMillis()
-        return currentTime - cache.getLastCacheTime() > expirationInterval
+        var delta = 0L
+        runBlocking(Dispatchers.IO) {
+            val currentTime = System.currentTimeMillis()
+            val lastCacheTime = async { cache.getLastCacheTime() }
+            delta = currentTime - lastCacheTime.await()
+        }
+        Timber.d("delta: $delta")
+        return delta > expirationInterval
+    }
+
+    private fun isOnline(): Boolean {
+        val runtime = Runtime.getRuntime()
+        try {
+            val ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8")
+            val exitValue = ipProcess.waitFor()
+            return exitValue == 0
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+        return false
     }
 
 }

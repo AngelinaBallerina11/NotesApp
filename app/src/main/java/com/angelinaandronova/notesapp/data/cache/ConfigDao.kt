@@ -11,7 +11,7 @@ import com.angelinaandronova.notesapp.model.Config
 interface ConfigDao {
 
     @Query("SELECT * FROM config")
-    fun getConfig(): Config
+    fun getConfig(): Config?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertConfig(config: Config)

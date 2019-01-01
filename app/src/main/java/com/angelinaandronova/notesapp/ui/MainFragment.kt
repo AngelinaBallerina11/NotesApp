@@ -42,13 +42,9 @@ class MainFragment : Fragment(), NotesAdapter.NoteCallback {
         return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        initViewModel()
-    }
-
     override fun onStart() {
         super.onStart()
+        initViewModel()
         initRecyclerview()
         addSwipeListener()
         add_fab.setOnClickListener { onAddNoteClicked() }

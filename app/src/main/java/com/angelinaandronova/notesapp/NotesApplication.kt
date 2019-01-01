@@ -7,6 +7,7 @@ import com.facebook.stetho.Stetho
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -36,7 +37,7 @@ class NotesApplication : Application(), HasActivityInjector {
     }
 
     private fun setupTimber() {
-        //Timber.plant(Timber.DebugTree())
+        Timber.plant(Timber.DebugTree())
     }
 
 }
