@@ -3,6 +3,7 @@ package com.angelinaandronova.notesapp.ui
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -11,7 +12,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.*
 import com.angelinaandronova.notesapp.R
-import com.angelinaandronova.notesapp.domain.NotesLocale
+import com.angelinaandronova.notesapp.domain.NotesLocale.*
 import com.angelinaandronova.notesapp.injection.module.ViewModelFactory
 import com.angelinaandronova.notesapp.model.Note
 import dagger.android.support.AndroidSupportInjection
@@ -25,8 +26,8 @@ class MainFragment : Fragment(), NotesAdapter.NoteCallback {
         fun newInstance() = MainFragment()
     }
 
+    private lateinit var adapter: NotesAdapter
     private lateinit var viewModel: MainViewModel
-    lateinit var adapter: NotesAdapter
     @Inject lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context?) {
@@ -103,15 +104,13 @@ class MainFragment : Fragment(), NotesAdapter.NoteCallback {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.english -> switchLanguage(NotesLocale.ENG)
-            R.id.czech -> switchLanguage(NotesLocale.CZE)
-            R.id.russian -> switchLanguage(NotesLocale.RUS)
+            R.id.english -> viewModel.switchLanguage(ENG)
+            R.id.czech -> viewModel.switchLanguage(CZE)
+            R.id.russian -> viewModel.switchLanguage(RUS)
         }
+        activity?.startActivity(Intent(activity, MainActivity::class.java))
+        activity?.finish()
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun switchLanguage(locale: NotesLocale) {
-
     }
 
 }

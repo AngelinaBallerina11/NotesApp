@@ -1,19 +1,26 @@
 package com.angelinaandronova.notesapp.ui
 
+import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModel
+import android.content.Context
+import android.content.res.Configuration
 import com.angelinaandronova.notesapp.domain.*
+import com.angelinaandronova.notesapp.domain.LocaleManager.updateResources
 import com.angelinaandronova.notesapp.model.Note
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
+
 class MainViewModel @Inject constructor(
-    private val commandProcessor: CommandProcessor
-) : ViewModel(), CoroutineScope {
+    private val commandProcessor: CommandProcessor,
+    private val app: Application
+) : AndroidViewModel(app), CoroutineScope {
 
     var job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -26,6 +33,7 @@ class MainViewModel @Inject constructor(
     @Inject lateinit var delete: DeleteNote
     @Inject lateinit var getSingle: GetSingleNote
     @Inject lateinit var edit: EditNote
+    private lateinit var appLanguage: String
 
     private fun fetchNotes() {
         getAll.execute()
@@ -70,5 +78,11 @@ class MainViewModel @Inject constructor(
                 commandProcessor.execute(edit.with(it.copy(title = editedText)))
             }
         }
+    }
+
+    fun switchLanguage(notesLocale: NotesLocale) {
+        appLanguage = notesLocale.language
+        LocaleManager.setLanguage(appLanguage, app)
+        updateResources(app)
     }
 }

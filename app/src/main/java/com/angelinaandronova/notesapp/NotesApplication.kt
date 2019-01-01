@@ -2,7 +2,9 @@ package com.angelinaandronova.notesapp
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.content.res.Configuration
+import com.angelinaandronova.notesapp.domain.LocaleManager
 import com.angelinaandronova.notesapp.injection.DaggerApplicationComponent
 import com.facebook.stetho.Stetho
 import dagger.android.AndroidInjector
@@ -32,11 +34,6 @@ class NotesApplication : Application(), HasActivityInjector {
             .application(this)
             .build()
             .inject(this)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-
     }
 
     private fun setupStetho() {

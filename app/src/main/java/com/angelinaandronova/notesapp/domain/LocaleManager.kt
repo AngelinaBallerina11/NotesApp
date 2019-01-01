@@ -2,32 +2,31 @@ package com.angelinaandronova.notesapp.domain
 
 import android.content.Context
 import android.content.res.Configuration
+import android.preference.PreferenceManager
 import java.util.*
 
 
 object LocaleManager {
 
-    fun setNewLocale(c: Context, language: String) {
-        persistLanguage(c, language);
-        updateResources(c, language);
+    private const val LANGUAGE_KEY = "language_key"
+
+    fun setLanguage(language: String, context: Context) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        prefs.edit().putString(LANGUAGE_KEY, language).apply()
     }
 
-    private fun persistLanguage(context: Context, language: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-
-    fun updateResources(context: Context, language: String) {
-        val locale = Locale(language);
-        Locale.setDefault(locale);
-
-        val res = context.resources;
-        val config = Configuration(res.configuration);
-        config.locale = locale;
-        res.updateConfiguration(config, res.displayMetrics);
+    fun updateResources(context: Context?) {
+        context?.let {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val locale = Locale(prefs.getString(LANGUAGE_KEY, NotesLocale.ENG.language))
+            Locale.setDefault(locale)
+            val config = Configuration(context.resources?.configuration)
+            config.setLocale(locale)
+            context.resources.updateConfiguration(config, context.resources.getDisplayMetrics())
+        }
     }
 }
 
-enum class NotesLocale(language: String) {
-    ENG("en"), CZE("cz"), RUS("ru")
+enum class NotesLocale(val language: String) {
+    ENG("en"), CZE("cs"), RUS("ru")
 }

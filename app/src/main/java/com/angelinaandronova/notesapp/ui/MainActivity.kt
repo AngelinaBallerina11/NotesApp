@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.angelinaandronova.notesapp.R
+import com.angelinaandronova.notesapp.domain.LocaleManager
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -18,7 +19,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+        LocaleManager.updateResources(this)
         setContentView(R.layout.main_activity)
+        setToolbar()
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -27,8 +30,11 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
+    private fun setToolbar() {
+        supportActionBar?.title = resources.getString(R.string.app_name)
+    }
+
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return dispatchingAndroidInjector
     }
-
 }
