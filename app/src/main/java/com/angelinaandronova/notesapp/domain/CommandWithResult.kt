@@ -3,11 +3,16 @@ package com.angelinaandronova.notesapp.domain
 import javax.inject.Inject
 
 
-class EditNote @Inject constructor(
+abstract class CommandWithResult<T>(
     private val repository: NotesRepository
 ) : Command(repository) {
 
     override fun execute() {
-        repository.editNote(note)
+        result = fetchValues()
     }
+
+    var result: T? = null
+
+    abstract fun fetchValues(): T
+
 }

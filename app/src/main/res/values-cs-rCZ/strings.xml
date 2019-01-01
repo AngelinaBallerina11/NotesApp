@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Poznámky</string>
+    <string name="note_deleted">1 poznámka smazana</string>
+    <string name="undo_string">ZPĚT</string>
+    <string name="save_note">ULOŽIT</string>
+    <string name="english">Angličtina</string>
+    <string name="czech">Čeština</string>
+    <string name="russian">Ruština</string>
+</resources>

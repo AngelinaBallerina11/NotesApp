@@ -10,4 +10,5 @@ interface NotesRepository {
     fun editNote(note: Note)
     fun delete(note: Note)
     fun getSingleNote(id: Int): LiveData<Note>
+    fun cancelJob()
 }

@@ -21,14 +21,15 @@ class MainViewModel @Inject constructor(
 
     private var notesList: LiveData<List<Note>>? = null
     private var editedNote: LiveData<Note>? = null
-    @Inject lateinit var getNotes: GetNotes
+    @Inject lateinit var getAll: GetNotes
     @Inject lateinit var add: AddNote
     @Inject lateinit var delete: DeleteNote
-    @Inject lateinit var getSingleNote: GetSingleNote
-    @Inject lateinit var editNote: EditNote
+    @Inject lateinit var getSingle: GetSingleNote
+    @Inject lateinit var edit: EditNote
 
     private fun fetchNotes() {
-        notesList = getNotes.execute()
+        getAll.execute()
+        notesList = getAll.result
     }
 
     fun getNotes(): LiveData<List<Note>>? {
@@ -51,12 +52,14 @@ class MainViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         job.cancel()
+        val commands = arrayListOf(getAll, add, delete, getSingle, edit)
+        commands.forEach { it.cancelJob() }
     }
 
     fun getNoteById(noteId: Int) {
-        val noteCommand = getSingleNote.with(noteId)
+        val noteCommand = getSingle.with(noteId)
         commandProcessor.execute(noteCommand)
-        editedNote = (noteCommand as GetSingleNote).getResult()
+        editedNote = (noteCommand as GetSingleNote).result
     }
 
     fun getEditedNote(): LiveData<Note>? = editedNote
@@ -64,7 +67,7 @@ class MainViewModel @Inject constructor(
     fun saveExistingNote(editedText: String) {
         editedNote?.value?.let {
             launch {
-                commandProcessor.execute(editNote.with(it.copy(title = editedText)))
+                commandProcessor.execute(edit.with(it.copy(title = editedText)))
             }
         }
     }

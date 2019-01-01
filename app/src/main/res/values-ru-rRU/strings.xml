@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Записи</string>
+    <string name="note_deleted">1 запись удалена</string>
+    <string name="undo_string">ВЕРНУТЬ</string>
+    <string name="save_note">СОХРАНИТЬ</string>
+    <string name="english">Английский</string>
+    <string name="czech">Чешский</string>
+    <string name="russian">Русский</string>
+</resources>

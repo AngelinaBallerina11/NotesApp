@@ -7,13 +7,10 @@ import javax.inject.Inject
 
 class GetSingleNote @Inject constructor(
     private val repository: NotesRepository
-) : Command() {
-    private var result: LiveData<Note>? = null
+) : CommandWithResult<LiveData<Note>>(repository) {
 
-    override fun execute() {
-        result = repository.getSingleNote(noteId!!)
+    override fun fetchValues(): LiveData<Note> {
+        return repository.getSingleNote(noteId!!)
     }
-
-    fun getResult(): LiveData<Note>? = result
 
 }

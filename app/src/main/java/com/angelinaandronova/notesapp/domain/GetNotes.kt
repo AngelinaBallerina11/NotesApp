@@ -7,6 +7,9 @@ import javax.inject.Inject
 
 class GetNotes @Inject constructor(
     private val repository: NotesRepository
-) {
-    fun execute(): LiveData<List<Note>> = repository.getNotes()
+) : CommandWithResult<LiveData<List<Note>>>(repository) {
+
+    override fun fetchValues(): LiveData<List<Note>> {
+        return repository.getNotes()
+    }
 }

@@ -3,8 +3,14 @@ package com.angelinaandronova.notesapp.domain
 import com.angelinaandronova.notesapp.model.Note
 
 
-abstract class Command {
+abstract class Command constructor(
+    private val repository: NotesRepository
+) {
     abstract fun execute()
+
+    fun cancelJob() {
+        repository.cancelJob()
+    }
 
     internal lateinit var note: Note
     fun with(note: Note): Command = apply {

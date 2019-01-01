@@ -9,10 +9,9 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.angelinaandronova.notesapp.R
+import com.angelinaandronova.notesapp.domain.NotesLocale
 import com.angelinaandronova.notesapp.injection.module.ViewModelFactory
 import com.angelinaandronova.notesapp.model.Note
 import dagger.android.support.AndroidSupportInjection
@@ -40,6 +39,16 @@ class MainFragment : Fragment(), NotesAdapter.NoteCallback {
         savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.main_fragment, container, false)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        activity?.menuInflater?.inflate(R.menu.language_menu, menu)
     }
 
     override fun onStart() {
@@ -92,4 +101,19 @@ class MainFragment : Fragment(), NotesAdapter.NoteCallback {
         AddNoteFragment.getInstance(noteId).show(fragmentManager, DIALOG)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.english -> switchLanguage(NotesLocale.ENG)
+            R.id.czech -> switchLanguage(NotesLocale.CZE)
+            R.id.russian -> switchLanguage(NotesLocale.RUS)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun switchLanguage(locale: NotesLocale) {
+
+    }
+
 }
+
+

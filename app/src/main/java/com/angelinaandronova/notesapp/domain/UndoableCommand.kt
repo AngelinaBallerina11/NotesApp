@@ -1,6 +1,8 @@
 package com.angelinaandronova.notesapp.domain
 
 
-abstract class UndoableCommand : Command() {
+abstract class UndoableCommand constructor(
+    private val repository: NotesRepository
+) : Command(repository) {
     abstract fun undo()
 }

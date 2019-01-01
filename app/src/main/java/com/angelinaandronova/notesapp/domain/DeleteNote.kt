@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class DeleteNote @Inject constructor(
     private val repository: NotesRepository
-) : UndoableCommand() {
+) : UndoableCommand(repository) {
 
     override fun execute() {
         repository.delete(note)

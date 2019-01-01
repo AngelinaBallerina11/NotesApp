@@ -115,4 +115,8 @@ class NotesRepositoryImpl @Inject constructor(
         return false
     }
 
+    override fun cancelJob() {
+        job.cancel()
+    }
+
 }
