@@ -8,11 +8,11 @@ class DeleteNote @Inject constructor(
 ) : UndoableCommand(repository) {
 
     override fun execute() {
-        repository.delete(note)
+        repository.delete(note!!)
     }
 
     override fun undo() {
-        repository.addNote(note)
+        repository.addNote(note!!)
     }
 
 }

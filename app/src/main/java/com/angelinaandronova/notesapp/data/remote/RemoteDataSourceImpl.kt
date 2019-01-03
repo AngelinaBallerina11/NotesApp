@@ -8,59 +8,67 @@ class RemoteDataSourceImpl @Inject constructor(
     private val service: NotesService
 ) : RemoteDataSource {
 
-    override fun getNotes(callback: GetNotesCallback) {
+    override fun fetchNotes(callback: RemoteCallback<List<Note>>) {
         return service.getAllNotes().enqueue {
             onResponse = {
-                if (it.isSuccessful) run {
-                    callback.onGetNotes(it.body())
+                val body = it.body()
+                if (it.isSuccessful && body != null) run {
+                    callback.onSuccess(body)
+                } else {
+                    callback.onFailure(null)
                 }
             }
 
             onFailure = {
-                callback.onGetNotes(null)
+                callback.onFailure(null)
             }
         }
     }
 
-    override fun createNote(note: Note, callback: CreateNoteCallback) {
+    override fun createNote(note: Note, callback: RemoteCallback<Note>) {
         return service.createSingleNote(note).enqueue {
             onResponse = {
-                if (it.isSuccessful) run {
-                    callback.onCreateNote(it.body())
+                val body = it.body()
+                if (it.isSuccessful && body != null) run {
+                    callback.onSuccess(body)
                 }
             }
-            onFailure = { callback.onCreateNote(null) }
+            onFailure = { callback.onFailure(null) }
         }
     }
 
-    override fun getNote(id: Int, callback: GetSingleNoteCallback) {
+    override fun getNote(id: Int, callback: RemoteCallback<Note>) {
         return service.getSingleNoteById(id).enqueue {
             onResponse = {
-                if (it.isSuccessful) run {
-                    callback.onGetSingleNote(it.body())
+                val body = it.body()
+                if (it.isSuccessful && body != null) run {
+                    callback.onSuccess(body)
                 }
             }
-            onFailure = { callback.onGetSingleNote(null) }
+            onFailure = { callback.onFailure(null) }
         }
     }
 
-    override fun updateNote(note: Note, callback: UpdateNoteCallback) {
+    override fun updateNote(note: Note, callback: RemoteCallback<Note>) {
         return service.updateSingleNote(note.id!!, note).enqueue {
             onResponse = {
-                if (it.isSuccessful) kotlin.run { callback.onUpdateNote(it.body()) }
+                val body = it.body()
+                if (it.isSuccessful && body != null) kotlin.run { callback.onSuccess(body) }
             }
-            onFailure = { callback.onUpdateNote(null) }
+            onFailure = { callback.onFailure(null) }
         }
     }
 
-    override fun deleteNote(id: Int, callback: DeleteNoteCallback) {
+    override fun deleteNote(id: Int, callback: RemoteCallback<Int>) {
         service.deleteSingleNote(id).enqueue {
             onResponse = {
                 if (it.code() == 204) {
-                    callback.onDeleteNote(id)
+                    callback.onSuccess(id)
                 }
             }
-            onFailure = { callback.onDeleteNote(null) }
+            onFailure = {
+                callback.onFailure(null)
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ abstract class Command constructor(
         repository.cancelJob()
     }
 
-    internal lateinit var note: Note
+    internal var note: Note? = null
     fun with(note: Note): Command = apply {
         this.note = note
     }

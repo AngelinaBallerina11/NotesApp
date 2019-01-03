@@ -8,6 +8,6 @@ class EditNote @Inject constructor(
 ) : Command(repository) {
 
     override fun execute() {
-        repository.editNote(note)
+        repository.editNote(note!!)
     }
 }

@@ -1,5 +1,6 @@
 package com.angelinaandronova.notesapp.domain
 
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 
@@ -8,6 +9,6 @@ class AddNote @Inject constructor(
 ) : Command(repository) {
 
     override fun execute() {
-        repository.addNote(note)
+        repository.addNote(note!!)
     }
 }

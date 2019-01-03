@@ -21,7 +21,7 @@ interface NotesService {
     fun getSingleNoteById(@Path("id") id: Int): Call<Note>
 
     @PUT("$NOTES_ENDPOINT/{id}")
-    fun updateSingleNote(@Path("id") id: Int, note: Note): Call<Note>
+    fun updateSingleNote(@Path("id") id: Int, @Body note: Note): Call<Note>
 
     @DELETE("$NOTES_ENDPOINT/{id}")
     fun deleteSingleNote(@Path("id") id: Int): Call<Unit>
